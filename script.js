@@ -19,14 +19,44 @@ const handleAddTask = () => {
     const taskContent = document.createElement('p')
     taskContent.innerText = inputElement.value
 
+    taskContent.addEventListener('click', () => handleClick(taskContent))
+
+    // delete item
     const deleteItem = document.createElement('i')
     deleteItem.classList.add('fa-solid')
     deleteItem.classList.add('fa-trash-can')
+
+    deleteItem.addEventListener('click', () => handleDeleteClick(taskItemContainer, taskContent))
+
 
     taskItemContainer.appendChild(taskContent)
     taskItemContainer.appendChild(deleteItem)
 
     tasksContainer.appendChild(taskItemContainer)
+
+    inputElement.value = ""
+
+    updateLocalStorage();
+}
+
+const handleClick = (taskContent) => {
+    const tasks = tasksContainer.childNodes
+
+    for(const task of tasks) {
+        if(task.firstChild.isSameNode(taskContent)) {
+            task.firstChild.classList.toggle('completed')
+        }
+    }
+}
+
+const handleDeleteClick = (taskItemContainer, taskContent) => {
+    const tasks = tasksContainer.childNodes
+
+    for(const task of tasks) {
+        if(task.firstChild.isSameNode(taskContent)) {
+            taskItemContainer.remove()
+        }
+    }
 }
 
 const handleInputChange = () => {
@@ -36,6 +66,7 @@ const handleInputChange = () => {
         return inputElement.classList.remove("error")
     }
 }
+
 
 addTaskButton.addEventListener('click', () => handleAddTask());
 inputElement.addEventListener('change', () => handleInputChange())
